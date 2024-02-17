@@ -24,15 +24,6 @@ export default {
 </script>
 
 <style scoped>
-/* .modal {
-  display: flex;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: #c4c0c080;
-} */
 .modal__content {
   margin: auto;
   background: #f3efef;
