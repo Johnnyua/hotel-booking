@@ -1,0 +1,44 @@
+<template>
+  <div class="modal" v-if="show" @click.stop="hideModal">
+    <div @click.stop class="modal__content">
+      <slot></slot>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'vModal',
+  props: {
+    show: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  methods: {
+    hideModal() {
+      this.$emit('update:show', false);
+    },
+  },
+};
+</script>
+
+<style scoped>
+/* .modal {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #c4c0c080;
+} */
+.modal__content {
+  margin: auto;
+  background: #f3efef;
+  border-radius: 12px;
+  min-height: 100px;
+  min-width: 300px;
+  padding: 15px;
+}
+</style>
