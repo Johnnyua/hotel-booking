@@ -27,7 +27,7 @@ export default {
       dateWeekStartToday: new Date(Date.now()),
       dayToday: new Date(Date.now()).getDay(),
       today: new Date(Date.now()),
-      daysOfWeek: 7,
+      daysOfWeek: 7, // You can change showing days of week
     };
   },
   methods: {
