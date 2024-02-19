@@ -36,18 +36,23 @@
         <div class="calendar__table__booking__header dates">
           <div
             class="calendar__table__booking__header__date date"
-            v-bind:class="{ today: todayLocaleString === date }"
-            v-for="(date, index) in datesLocaleString"
+            v-bind:class="{ today: todayLocaleString === dateObj.date }"
+            v-for="(dateObj, index) in datesLocaleString"
             :key="index"
           >
             <div class="calendar__table__booking__header__text">
-              {{ date.split('.')[0] }}.
+              <div class="calendar__table__booking__header__text__date">
+                {{ dateObj.date.split('.')[0] }}.
+              </div>
+              <div class="calendar__table__booking__header__text__date">
+                {{ dateObj.date.split('.')[1] }}.
+              </div>
+              <div class="calendar__table__booking__header__text__date">
+                {{ dateObj.date.split('.')[2] }}
+              </div>
             </div>
-            <div class="calendar__table__booking__header__text">
-              {{ date.split('.')[1] }}.
-            </div>
-            <div class="calendar__table__booking__header__text">
-              {{ date.split('.')[2] }}
+            <div class="calendar__table__booking__header__text__week">
+              {{ dateObj.weekname }}
             </div>
           </div>
         </div>
@@ -59,8 +64,8 @@
           >
             <div
               class="calendar__table__booking__body__date date"
-              v-bind:class="{ today: todayLocaleString === date }"
-              v-for="(date, dateIndex) in datesLocaleString"
+              v-bind:class="{ today: todayLocaleString === dateObj.date }"
+              v-for="(dateObj, dateIndex) in datesLocaleString"
               :key="dateIndex"
             ></div>
             <div
@@ -68,8 +73,10 @@
               v-for="bookingDetail in roomname"
               :key="bookingDetail.id"
               :style="{
-                width: calcWidth(bookingDetail.start, bookingDetail.end).width,
-                left: calcWidth(bookingDetail.start, bookingDetail.end).left,
+                width: calcWidthOffset(bookingDetail.start, bookingDetail.end)
+                  .width,
+                left: calcWidthOffset(bookingDetail.start, bookingDetail.end)
+                  .left,
               }"
               :class="{
                 no_border_left: getBookingPeriodBorder(
@@ -103,7 +110,10 @@
 </template>
 
 <script>
-import { convertStringDateToLocaleDate } from '../helpers';
+import {
+  convertStringDateToLocaleDate,
+  getWeekAsShortString,
+} from '../helpers';
 
 export default {
   name: 'vCalendar',
@@ -143,7 +153,7 @@ export default {
     handleNext(e) {
       this.$emit('onnext', e);
     },
-    calcWidth(dateStart, dateEnd) {
+    calcWidthOffset(dateStart, dateEnd) {
       let width = 0;
       let left = 0;
       const { indexStart, indexEnd, isStart, isEnd } =
@@ -178,10 +188,10 @@ export default {
       const dateStartToLocaleDate = convertStringDateToLocaleDate(dateStart);
       const dateEndToLocaleDate = convertStringDateToLocaleDate(dateEnd);
       let indexStart = this.datesLocaleString.findIndex(
-        (item) => item === dateStartToLocaleDate
+        (item) => item.date === dateStartToLocaleDate
       );
       let indexEnd = this.datesLocaleString.findIndex(
-        (item) => item === dateEndToLocaleDate
+        (item) => item.date === dateEndToLocaleDate
       );
       if (indexStart === -1) {
         indexStart = -1;
@@ -199,13 +209,21 @@ export default {
     onCloseCard() {
       this.showModal = false;
     },
+    getWeek(date) {
+      return getWeekAsShortString(date);
+    },
   },
   computed: {
     todayLocaleString() {
       return this.today.toLocaleDateString();
     },
     datesLocaleString() {
-      return [...this.dates].map((item) => item.toLocaleDateString());
+      return [...this.dates].map((item) => {
+        return {
+          date: convertStringDateToLocaleDate(item),
+          weekname: getWeekAsShortString(item),
+        };
+      });
     },
   },
 };
@@ -232,7 +250,8 @@ export default {
 .date,
 .calendar__header,
 .calendar__table__booking,
-.calendar__table__booking__body__room {
+.calendar__table__booking__body__room,
+.calendar__table__booking__header__text {
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -257,8 +276,13 @@ export default {
   justify-content: flex-start;
 }
 .calendar__container,
-.calendar__table__booking {
+.calendar__table__booking,
+.calendar__table__booking__header__date {
   flex-direction: column;
+}
+
+.calendar__table__booking__header__date {
+  gap: 5px;
 }
 
 .calendar__table__wrapper,

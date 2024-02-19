@@ -1,1 +1,1 @@
-export { getStartWeekDate, convertStringDateToLocaleDate } from './date';
+export { getStartWeekDate, convertStringDateToLocaleDate, getWeekAsShortString } from './date';

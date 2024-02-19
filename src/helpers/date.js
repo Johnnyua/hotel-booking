@@ -9,4 +9,8 @@ const convertStringDateToLocaleDate = (value) => {
   return new Date(value).toLocaleDateString();
 };
 
-export { getStartWeekDate, convertStringDateToLocaleDate };
+const getWeekAsShortString = (value) => {
+  return new Date(value).toLocaleDateString('en-us', {  weekday: 'short' });
+};
+
+export { getStartWeekDate, convertStringDateToLocaleDate, getWeekAsShortString };

@@ -4,6 +4,9 @@
       <h1 class="booking__card__header__title title">
         {{ bookingCard.name }}
       </h1>
+      <div class="booking__card__header__dates subtitle">
+        {{ dateStart }} - {{ dateEnd }}  
+      </div>
       <div class="booking__card__header__text card">
         <a
           class="booking__card__header__text__phone"
@@ -42,6 +45,8 @@
 </template>
 
 <script>
+import { convertStringDateToLocaleDate } from '../helpers';
+
 export default {
   name: 'vBookingCard',
   emits: ['onclosecard'],
@@ -56,6 +61,14 @@ export default {
   methods: {
     handleCloseCard(e) {
       this.$emit('onclosecard', e);
+    },
+  },
+  computed: {
+    dateStart() {
+      return convertStringDateToLocaleDate(this.bookingCard.start)
+    },
+    dateEnd() {
+      return convertStringDateToLocaleDate(this.bookingCard.end)
     },
   },
 };
